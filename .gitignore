@@ -6,6 +6,16 @@ __pycache__/
 # C extensions
 *.so
 
+# Credentials - never commit
+gcp-credentials.json
+
+# Mac system files
+.DS_Store
+**/.DS_Store
+
+# Data files (too large for GitHub)
+data/raw/*.csv
+
 # Distribution / packaging
 .Python
 build/

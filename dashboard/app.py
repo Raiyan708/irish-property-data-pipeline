@@ -70,19 +70,14 @@ st.plotly_chart(trend_fig, use_container_width=True)
 # --- Map view ---
 st.subheader("Median price by county (latest year, all selected property types)")
 map_latest_year = filtered["year"].max()
-map_df = filtered[filtered["year"] == map_latest_year]
+map_df = filtered[filtered["year"] == map_latest_year].copy()
+map_df["_weighted_price"] = map_df["median_price_eur"] * map_df["transaction_count"]
 county_agg = (
-    map_df.groupby("county")
-    .apply(
-        lambda g: pd.Series(
-            {
-                "weighted_median_price_eur": (g["median_price_eur"] * g["transaction_count"]).sum()
-                / g["transaction_count"].sum(),
-                "total_transactions": g["transaction_count"].sum(),
-            }
-        )
-    )
-    .reset_index()
+    map_df.groupby("county", as_index=False)
+    .agg(_weighted_price_sum=("_weighted_price", "sum"), total_transactions=("transaction_count", "sum"))
+)
+county_agg["weighted_median_price_eur"] = (
+    county_agg["_weighted_price_sum"] / county_agg["total_transactions"]
 )
 county_agg["lat"] = county_agg["county"].map(lambda c: COUNTY_COORDINATES.get(c, (None, None))[0])
 county_agg["lon"] = county_agg["county"].map(lambda c: COUNTY_COORDINATES.get(c, (None, None))[1])

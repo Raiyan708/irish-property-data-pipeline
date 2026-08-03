@@ -172,6 +172,7 @@ services:
       BQ_DATASET: ppr_warehouse
       BQ_TABLE: property_price_summary
       PYTHONPATH: /app
+      PYTHONFAULTHANDLER: "1"
     command: streamlit run dashboard/app.py --server.address=0.0.0.0
 
   postgres:

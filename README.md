@@ -8,7 +8,6 @@ property sales), streams it through Kafka into Delta Lake (Bronze → Silver →
 Gold), loads it into BigQuery, polishes it with dbt, orchestrates all of it
 with Airflow, and presents it in a Streamlit dashboard.
 
-See [CLAUDE.md](CLAUDE.md) for the architecture and tech stack.
 
 ## Project structure
 

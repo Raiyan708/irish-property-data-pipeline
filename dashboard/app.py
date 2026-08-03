@@ -9,8 +9,8 @@ import pandas as pd
 import plotly.express as px
 import streamlit as st
 
-from dashboard.county_coordinates import COUNTY_COORDINATES
-from dashboard.data import load_price_summary
+from county_coordinates import COUNTY_COORDINATES
+from data import load_price_summary
 
 st.set_page_config(page_title="Irish Property Price Register", layout="wide")
 st.title("Irish Property Price Register")

@@ -103,6 +103,77 @@ services:
       --packages io.delta:delta-spark_2.12:3.2.0
       streaming/silver_transform.py
 
+  spark-gold:
+    build:
+      context: ..
+      dockerfile: docker/spark/Dockerfile
+    container_name: ppr-spark-gold
+    volumes:
+      - ../streaming:/app/streaming
+      - ../data:/app/data
+    working_dir: /app
+    environment:
+      SILVER_PATH: /app/data/delta/silver/property_transactions
+      GOLD_PATH: /app/data/delta/gold/county_yearly_price_summary
+      PYTHONPATH: /app
+    command: >
+      /opt/spark/bin/spark-submit
+      --packages io.delta:delta-spark_2.12:3.2.0
+      streaming/gold_transform.py
+
+  load-gold:
+    build:
+      context: ..
+      dockerfile: docker/warehouse/Dockerfile
+    container_name: ppr-load-gold
+    volumes:
+      - ../warehouse:/app/warehouse
+      - ../data:/app/data
+      - ../gcp-credentials.json:/app/gcp-credentials.json:ro
+    working_dir: /app
+    environment:
+      GOLD_PATH: /app/data/delta/gold/county_yearly_price_summary
+      GCP_PROJECT_ID: irish-ppr-pipeline
+      BQ_DATASET: ppr_warehouse
+      BQ_TABLE: county_yearly_price_summary
+      GOOGLE_APPLICATION_CREDENTIALS: /app/gcp-credentials.json
+      PYTHONPATH: /app
+    command: python -m warehouse.load_gold
+
+  dbt:
+    build:
+      context: ..
+      dockerfile: docker/dbt/Dockerfile
+    container_name: ppr-dbt
+    volumes:
+      - ../dbt:/app/dbt
+      - ../gcp-credentials.json:/app/gcp-credentials.json:ro
+    working_dir: /app/dbt
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /app/gcp-credentials.json
+      DBT_PROFILES_DIR: /app/dbt
+    entrypoint: dbt
+    command: run
+
+  dashboard:
+    build:
+      context: ..
+      dockerfile: docker/dashboard/Dockerfile
+    container_name: ppr-dashboard
+    volumes:
+      - ../dashboard:/app/dashboard
+      - ../gcp-credentials.json:/app/gcp-credentials.json:ro
+    working_dir: /app
+    ports:
+      - "8501:8501"
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /app/gcp-credentials.json
+      GCP_PROJECT_ID: irish-ppr-pipeline
+      BQ_DATASET: ppr_warehouse
+      BQ_TABLE: property_price_summary
+      PYTHONPATH: /app
+    command: streamlit run dashboard/app.py --server.address=0.0.0.0
+
   postgres:
     image: postgres:16
     container_name: ppr-airflow-postgres

@@ -16,6 +16,8 @@ SILVER_CHECKPOINT_PATH: str = os.getenv(
     "SILVER_CHECKPOINT_PATH", "data/delta/_checkpoints/silver/property_transactions"
 )
 
+GOLD_PATH: str = os.getenv("GOLD_PATH", "data/delta/gold/county_yearly_price_summary")
+
 # "once" runs the query until the topic is drained then stops (good for batch-style
 # backfills and testing); "continuous" keeps the stream running indefinitely.
 TRIGGER_MODE: str = os.getenv("STREAMING_TRIGGER_MODE", "once")

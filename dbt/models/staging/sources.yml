@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: warehouse
+    description: Tables loaded into BigQuery by warehouse/load_gold.py (outside of dbt).
+    database: irish-ppr-pipeline
+    schema: ppr_warehouse
+    tables:
+      - name: county_yearly_price_summary
+        description: Gold-layer county/year/property-type price summary, loaded from Delta Lake.

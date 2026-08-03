@@ -1,0 +1,11 @@
+ppr_pipeline:
+  target: dev
+  outputs:
+    dev:
+      type: bigquery
+      method: service-account
+      project: irish-ppr-pipeline
+      dataset: ppr_warehouse
+      keyfile: "{{ env_var('GOOGLE_APPLICATION_CREDENTIALS') }}"
+      location: europe-west1
+      threads: 4

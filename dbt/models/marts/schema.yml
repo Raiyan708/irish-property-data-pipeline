@@ -1,0 +1,35 @@
+version: 2
+
+models:
+  - name: property_price_summary
+    description: >
+      County/year/property-type level Irish house price summary, with
+      year-over-year median price change. Built on top of the Gold table
+      loaded into BigQuery by warehouse/load_gold.py.
+    columns:
+      - name: county
+        description: Irish county name.
+        data_tests:
+          - not_null
+      - name: year
+        description: Calendar year of sale.
+        data_tests:
+          - not_null
+      - name: property_type
+        description: >
+          Property description from the source PPR data (e.g. "New Dwelling
+          house /Apartment", "Second-Hand Dwelling house /Apartment").
+      - name: transaction_count
+        description: Number of sales in this county/year/property-type bucket.
+        data_tests:
+          - not_null
+      - name: median_price_eur
+        description: Median sale price in EUR for this bucket.
+        data_tests:
+          - not_null
+      - name: median_price_change_eur
+        description: >
+          Change in median price versus the prior year for the same county
+          and property type. Null for a bucket's first year on record.
+      - name: median_price_change_pct
+        description: Same as median_price_change_eur, expressed as a percentage.

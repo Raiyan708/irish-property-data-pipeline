@@ -1,5 +1,7 @@
 # Irish Property Price Register — Data Pipeline
 
+**Live dashboard**: https://irish-property-prices.streamlit.app
+
 A local, Docker-based data pipeline that ingests the real [Property Price
 Register](https://www.propertypriceregister.ie/) CSV (797,775 real Irish
 property sales), streams it through Kafka into Delta Lake (Bronze → Silver →

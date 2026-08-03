@@ -96,3 +96,7 @@ Airflow's Postgres DB) for next time.
 - A GCP project with BigQuery enabled and a service account key saved as
   `gcp-credentials.json` in the project root (see `.env.example` for other
   configurable env vars)
+
+## License
+
+MIT — see [LICENSE](LICENSE).
